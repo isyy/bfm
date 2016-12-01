@@ -10,6 +10,8 @@ int main(void) {
 char array[] = {0};
 char *ptr=array;
 
+x = 0 
+ 
 // open file "main.bfm" //
 FILE *fp;
 fp=fopen("main.bfm", "r");
