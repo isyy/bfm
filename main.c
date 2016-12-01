@@ -47,3 +47,5 @@ while  ( ( x = fgetc( file ) ) != EOF )
    break;
  }
 }
+
+exit(0);
