@@ -2,6 +2,10 @@
 // copyright (C) 2016 isy //
 // under the GPLv2-License (SEE LICENSE.md) //
 
+#include <stdio.h>
+
+int main(void) {
+
 // init tape //
 char array[] = {0};
 char *ptr=array;
@@ -49,3 +53,4 @@ while  ( ( x = fgetc( file ) ) != EOF )
 }
 
 exit(0);
+}
