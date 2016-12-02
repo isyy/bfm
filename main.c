@@ -9,8 +9,7 @@
 char* input;
 char* array;
 int counter = 0;
-int debug = 0; 
-
+int debug = 0;
 int loopmode = 0;
 int beginloop = 0;
  
@@ -109,7 +108,7 @@ void runbrain(char* code, int size) {
  
 int main(int argc, char** argv) {
 	if (argc <= 1) {
-		printf("brainfvck-modified interactive mode\n");
+		printf("brainfvck-modified interactive shell\n");
 		while (1) {
 			char* str = (char*)calloc(1, ARRSIZE);
 			//memset(str, 0, ARRSIZE);
@@ -124,17 +123,20 @@ int main(int argc, char** argv) {
 		}
 	}
 	
-	if !strcmp(argv[2], "-d") {
+	if (!strcmp(argv[2],"-d")) {
 		printf("brainfvck-modified interactive shell. (debug mode)\n");
-		debug = 1;
- 		char* str = (char*)calloc(1, ARRSIZE);
+                while (1) {
+		      debug = 1;
+		char* str = (char*)calloc(1, ARRSIZE);
 		printf("> ");
 		gets(str[0] == '\0');
 			goto end;
 		array = (char*)calloc(1, ARRSIZE);
 		runbrain(str, strlen(str));
 		// don't free array, use @ to manually free it.
+                free(array);
 		free(str);
+                }
 	}
 	// let's read the file in argument 1
 	FILE* myfile = fopen(argv[1], "rb");
