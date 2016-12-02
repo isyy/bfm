@@ -53,9 +53,10 @@ int interpret(char x, int i) {
 			loopmode = 1;
 			beginloop = i;
 			break;
-		//case ']':
-		//	loopmode = 0;
-		//	break;
+                case '!':
+                        printf("exiting...\n");
+                        exit(0);
+                        break;
 		case '#': // debugging command, prints out the tape
 			debugprintarray();
 			break;
