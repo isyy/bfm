@@ -132,7 +132,7 @@ int main(int argc, char** argv) {
 		gets(str[0] == '\0');
 			goto end;
 		array = (char*)calloc(1, ARRSIZE);
-		runbtrain(str, strlen(str));
+		runbrain(str, strlen(str));
 		// don't free array, use @ to manually free it.
 		free(str);
 	}
