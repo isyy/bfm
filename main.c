@@ -126,10 +126,10 @@ int main(int argc, char** argv) {
 	
 	if (argv[2] == "-d") {
 		printf("brainfvck-modified interactive shell. (debug mode)\n");
-		debug = 1
+		debug = 1;
  		char* str = (char*)calloc(1, ARRSIZE);
 		printf("> ");
-		gets(str[0] == '\0')
+		gets(str[0] == '\0');
 			goto end;
 		array = (char*)calloc(1, ARRSIZE);
 		runbtrain(str, strlen(str));
