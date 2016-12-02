@@ -9,7 +9,8 @@
 char* input;
 char* array;
 int counter = 0;
- 
+int debug = 0; 
+
 int loopmode = 0;
 int beginloop = 0;
  
@@ -27,7 +28,9 @@ int debugprintarray() {
 }
  
 int interpret(char x, int i) {
-	//printf("Interpreting '%c' at pos %d\n", x, i);
+	if (debug == 1) {
+		printf("Interpreting '%c' at pos %d\n", x, i);
+	}
 	switch (x) {
 		case '>':
 			++counter;
@@ -37,11 +40,15 @@ int interpret(char x, int i) {
 			break;
 		case '+':
 			++(array[counter]);
-			//printf("Char at pos %d is now %d\n", counter, array[counter]);
+			if (debug == 1) {
+				printf("Char at pos %d is now %d\n", counter, array[counter]);
+			}
 			break;
 		case '-':
 			--(array[counter]);
-			//printf("Char at pos %d is now %d\n", counter, array[counter]);
+			if (debug == 1) {
+				printf("Char at pos %d is now %d\n", counter, array[counter]);
+			}
 			break;
 		case '.':
 			printf("%c", array[counter]);
@@ -58,8 +65,15 @@ int interpret(char x, int i) {
                         exit(0);
                         break;
 		case '#': // debugging command, prints out the tape
-			debugprintarray();
-			break;
+			if (debug == 1) {
+				debugprintarray();
+				break;
+			}
+		case '@': // debugging command, frees array
+			if (debug == 1) {
+				free(array);
+				break;
+			}
 		default:
 			break;
 	}
@@ -68,16 +82,22 @@ int interpret(char x, int i) {
 }
  
 void runbrain(char* code, int size) {
-	//printf("Code: %s, size: %d\n", code, size);
+	if (debug == 1) {
+	printf("Code: %s, size: %d\n", code, size);
+	}
 	printf("Output: ");
 	for (int i = 0; i < size; ++i) {
-		//printf("I: %d, char: %c\n", i, code[i]);
+		if (debug == 1) {
+			printf("I: %d, char: %c\n", i, code[i]);
+		}
 		interpret(code[i], i);
 		if (loopmode) {
 			if (code[i] == ']') {
 				if (array[counter]) {
 					i = beginloop;
-					//printf("array counter: %d %d\n", array[counter], counter);
+					if (debug == 1) {
+						printf("array counter: %d %d\n", array[counter], counter);
+					}
 				}
 				else
 					loopmode = 0;
@@ -103,7 +123,19 @@ int main(int argc, char** argv) {
 			free(str);
 		}
 	}
- 
+	
+	if (argv[2] == "-d") {
+		printf("brainfvck-modified interactive shell. (debug mode)\n");
+		debug = 1
+ 		char* str = (char*)calloc(1, ARRSIZE);
+		printf("> ");
+		gets(str[0] == '\0')
+			goto end;
+		array = (char*)calloc(1, ARRSIZE);
+		runbtrain(str, strlen(str));
+		// don't free array, use @ to manually free it.
+		free(str);
+	}
 	// let's read the file in argument 1
 	FILE* myfile = fopen(argv[1], "rb");
  
