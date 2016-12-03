@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 #define ARRSIZE 30000 // TODO: make dynamic
- 
+
 //char input[] = "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.";
 char* input;
 char* array;
@@ -12,7 +12,9 @@ int counter = 0;
 int debug = 0;
 int loopmode = 0;
 int beginloop = 0;
- 
+
+char* debugout = 0;
+
 int debugprintarray() {
 	printf("\nDEBUG: [");
 	for (int i = 0; i < ARRSIZE; ++i) {
@@ -27,9 +29,9 @@ int debugprintarray() {
 }
  
 int interpret(char x, int i) {
-	if (debug == 1) {
+	if (debug == 1)
 		printf("Interpreting '%c' at pos %d\n", x, i);
-	}
+
 	switch (x) {
 		case '>':
 			++counter;
@@ -39,18 +41,20 @@ int interpret(char x, int i) {
 			break;
 		case '+':
 			++(array[counter]);
-			if (debug == 1) {
+			if (debug == 1)
 				printf("Char at pos %d is now %d\n", counter, array[counter]);
-			}
 			break;
 		case '-':
 			--(array[counter]);
-			if (debug == 1) {
+			if (debug == 1)
 				printf("Char at pos %d is now %d\n", counter, array[counter]);
-			}
 			break;
 		case '.':
-			printf("%c", array[counter]);
+			if (debug == 1)
+				//sprintf(debugout, "%c", array[counter]);
+				strncat(debugout, array+counter, 1);
+			else
+				printf("%c", array[counter]);
 			break;
 		case ',':
 			array[counter] = getchar();
@@ -64,24 +68,22 @@ int interpret(char x, int i) {
 			exit(0);
 			break;
 		case '#': // debugging command, prints out the tape
-			if (debug == 1) {
+			if (debug == 1)
 				debugprintarray();
-				break;
-			}
-			else {
-				break;
-			}
+			break;
 		case '@': // debugging command, frees array
 			if (debug == 1) {
+				//free(array);
 				memset(array, 0, ARRSIZE);
 				printf("tape cleared.\n");
-				break;
 			}
-			else {
-				break;
-			}
+			break;
 		case '/':
+#ifdef _WIN32
+			system("cls");
+#else
 			system("clear");
+#endif
 			break;
 		case 'v': // version command
 			printf("bfm v1\n");
@@ -98,26 +100,31 @@ int interpret(char x, int i) {
  
 void runbrain(char* code, int size) {
 	if (debug == 1) {
-	printf("Code: %s, size: %d\n", code, size);
+		printf("Code: %s, size: %d\n", code, size);
+		debugout = (char*)calloc(1, 2048); // temp size
 	}
+
 	for (int i = 0; i < size; ++i) {
-		if (debug == 1) {
+		if (debug == 1)
 			printf("I: %d, char: %c\n", i, code[i]);
-		}
 		interpret(code[i], i);
 		if (loopmode) {
 			if (code[i] == ']') {
 				if (array[counter]) {
 					i = beginloop;
-					if (debug == 1) {
+					if (debug == 1)
 						printf("array counter: %d %d\n", array[counter], counter);
-					}
-				}
-				else
+				} else
 					loopmode = 0;
 			}
 		}
 	}
+
+	if (debug == 1) {
+		printf("\nProgram output: %s\n", debugout);
+		free(debugout);
+	} else
+		puts("");
 }
 
 void runshell(int isdebug) {
@@ -128,17 +135,24 @@ void runshell(int isdebug) {
 		debug = 1;
 	}
 
+	char* str;
+	if (isdebug)
+		str = (char*)calloc(1, ARRSIZE);
+
 	while (1) {
-		char* str = (char*)calloc(1, ARRSIZE);
+		if (!isdebug)
+			str = (char*)calloc(1, ARRSIZE);
 		//memset(str, 0, ARRSIZE);
 		printf("bfm> ");
 		fgets(str, ARRSIZE, stdin);
 		if (str[0] == '\0')
 			return;
 		array = (char*)calloc(1, ARRSIZE);
-		runbrain(str, strlen(str));
+		if (!(str[0] == 0x0A))
+			runbrain(str, strlen(str));
 		free(array);
-		free(str);
+		if (!isdebug)
+			free(str);
 	}
 }
 
