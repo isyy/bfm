@@ -3,7 +3,7 @@
 // under the GPLv2-License (SEE LICENSE.md) //
 
 #include <stdio.h>
-#define ARRSIZE 30000 // TODO: make dynamic
+#define ARRSIZE 30000 // TODO: wrap underflows and overflows
 
 //char input[] = "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.";
 char* input;
@@ -79,17 +79,17 @@ int interpret(char x, int i) {
 			}
 			break;
 		case '/':
-#ifdef _WIN32
+			#ifdef _WIN32
 			system("cls");
-#else
+			#else
 			system("clear");
-#endif
+			#endif
 			break;
 		case 'v': // version command
 			printf("bfm v1\n");
 			break;
 		case '?': // help command
-			printf("\nbfm - an expanded brainfuck interpreter.\n\n> - move pointer right.\n< - move pointer left.\n+ - add 1 to current cell.\n- - subtract 1 from current cell.\n. - print contents of current cell in ASCII.\n, - ask for one char of user input.\n! - end program.\n# - print contents of tape.\n@ - clear tape.\n/ - clear screen.\nv - show version.\n? - shows this help dialogue.\n");
+			printf("\nbfm - an expanded brainfuck interpreter.\n\n> - move pointer right.\n< - move pointer left.\n+ - add 1 to current cell.\n- - subtract 1 from current cell.\n. - print contents of current cell in ASCII.\n, - ask for one char of user input.\n[ - start loop.\n] - end loop.\n! - end program.\n# - print contents of tape.\n@ - clear tape.\n/ - clear screen.\nv - show version.\n? - show this help dialogue.\n");
 			break;
 		default:
 			break;
