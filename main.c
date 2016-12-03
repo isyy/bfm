@@ -73,7 +73,7 @@ int interpret(char x, int i) {
 			}
 		case '@': // debugging command, frees array
 			if (debug == 1) {
-				free(array);
+				memset(array, 0, ARRSIZE);
 				printf("tape cleared.\n");
 				break;
 			}
@@ -87,7 +87,7 @@ int interpret(char x, int i) {
 			printf("bfm v1\n");
 			break;
 		case '?': // help command
-			printf("\nbfm - an expanded brainfuck interpreter.\n\n> - move pointer right.\n< - move pointer left.\n+ - add 1 to current cell.\n- - subtract 1 from current cell.\n. - print contents of current cell in ASCII.\n, - ask for one char of user input.\n! - end program.\n# - print contents of tape.\n@ - clear tape.\n/ - clear screen.\nv - show version\n? - shows this help dialogue.\n");
+			printf("\nbfm - an expanded brainfuck interpreter.\n\n> - move pointer right.\n< - move pointer left.\n+ - add 1 to current cell.\n- - subtract 1 from current cell.\n. - print contents of current cell in ASCII.\n, - ask for one char of user input.\n! - end program.\n# - print contents of tape.\n@ - clear tape.\n/ - clear screen.\nv - show version.\n? - shows this help dialogue.\n");
 			break;
 		default:
 			break;
@@ -112,7 +112,6 @@ void runbrain(char* code, int size) {
 					if (debug == 1) {
 						printf("array counter: %d %d\n", array[counter], counter);
 					}
-					printf("\n")
 				}
 				else
 					loopmode = 0;
