@@ -73,6 +73,8 @@ int interpret(char x, int i) {
 				free(array);
 				break;
 			}
+		case '?': // help command
+			printf ("\nbfm - an expanded brainfuck interpreter.\n\n> - move pointer right.\n< - move pointer left.\n+ - add 1 to current cell.\n- - subtract 1 from current cell.\n. - print contents of current cell in ASCII.\n, - ask for one char of user input.\n! - end program.\n# - print contents of tape.\n@ - clear tape.\n? - shows this help dialogue.\n");
 		default:
 			break;
 	}
@@ -84,7 +86,6 @@ void runbrain(char* code, int size) {
 	if (debug == 1) {
 	printf("Code: %s, size: %d\n", code, size);
 	}
-	printf("Output: ");
 	for (int i = 0; i < size; ++i) {
 		if (debug == 1) {
 			printf("I: %d, char: %c\n", i, code[i]);
@@ -103,7 +104,6 @@ void runbrain(char* code, int size) {
 			}
 		}
 	}
-	printf("\nProgram finished.\n");
 }
  
 int main(int argc, char** argv) {
@@ -129,8 +129,7 @@ int main(int argc, char** argv) {
 		      debug = 1;
 		char* str = (char*)calloc(1, ARRSIZE);
 		printf("> ");
-		gets(str[0] == '\0');
-			goto end;
+		gets(str);
 		array = (char*)calloc(1, ARRSIZE);
 		runbrain(str, strlen(str));
 		// don't free array, use @ to manually free it.
