@@ -147,7 +147,7 @@ int interpret(char x, int i) {
 }
 
 void compilebrain(char* code, int size) {
-	printf("wee it works");
+	printf("wee it works!\n");
 }
 
 void runbrain(char* code, int size) {
