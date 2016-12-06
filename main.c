@@ -1,4 +1,4 @@
-// bfm interpreter & interactive shell. //
+// bfm interpreter/compiler & interactive shell. //
 // copyright (C) 2016 isy //
 // under the GPLv3-License (SEE LICENSE.md) //
 
