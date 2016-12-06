@@ -236,7 +236,7 @@ void runfile(char* filename) {
  
 int main(int argc, char** argv) {
 	for (int i = 0; i < argc; ++i) {
-		if (!strcmp(argv[i], "-c")) {
+		if (!strcmp(argv[i], "-d")) {
 			compilebrain;
 			goto end;
 		}
