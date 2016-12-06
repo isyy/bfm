@@ -1,2 +1,2 @@
 bfm:
-	gcc -std=c99 main.c -o bfm
+	@gcc -std=c99 -w main.c -o bfm

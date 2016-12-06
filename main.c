@@ -1,6 +1,6 @@
-// brainfvck-modified interpreter //
+// bfm interpreter & interactive shell. //
 // copyright (C) 2016 isy //
-// under the GPLv2-License (SEE LICENSE.md) //
+// under the GPLv3-License (SEE LICENSE.md) //
 
 #include <stdio.h>
 #define ARRSIZE 30000 // TODO: wrap underflows and overflows
@@ -9,9 +9,11 @@
 char* input;
 char* array;
 int counter = 0;
-int debug = 0;
+int debug = 0; // debug mode variable, 0 = off, 1 = on. if corrupted the 'd' command will temporarily restore it.
 int loopmode = 0;
 int beginloop = 0;
+int isdebugfile = 0;
+char* vernum = "1.2-rc1\n"; // current release variable, only displayed when 'v' is run in debug mode.
 
 char* debugout = 0;
 
@@ -70,26 +72,66 @@ int interpret(char x, int i) {
 		case '#': // debugging command, prints out the tape
 			if (debug == 1)
 				debugprintarray();
-			break;
+			else {
+				printf("hey! that'0s a debug (-d) mode only command!");
+				break;
+			}
 		case '@': // debugging command, frees array
 			if (debug == 1) {
 				//free(array);
 				memset(array, 0, ARRSIZE);
 				printf("tape cleared.\n");
 			}
-			break;
+			else {
+				printf("hey! that's a debug (-d) mode only command!");
+				break;
+			}
 		case '/':
 			#ifdef _WIN32
 			system("cls");
 			#else
 			system("clear");
 			#endif
-			break;
+			if (debug == 1) {
+				printf("bfm interactive shell (debug mode).\n");
+				break;
+			}
+			else if (debug == 0) {
+				printf("bfm interactive shell.\n");
+				break;
+			}
 		case 'v': // version command
-			printf("bfm v1\n");
+			if (debug == 1) {
+				printf("bfm v1");
+				printf("\nthe exact version number is: ");
+				printf(vernum);
+				break;
+			}
+			else {
+				printf("bfm v1");
+				break;
+			}
+		case 'c': // credits command
+			printf("bfm - built by @isy#0669 and @YPwn#9731");
 			break;
+		case 'd':
+			if (debug == 0) {
+				debug = 1;
+				printf("debug mode is now toggled ON. use 'd' again to turn it off.\n");
+				break;
+			}
+			else if (debug == 1) {
+				debug = 0;
+				printf("debug mode is now toggled OFF. use 'd' again to turn it on.\n");
+				break;
+			}
+			else {
+				debug = 0;
+				printf("the debug variable was corrupted and is now set to 0. use 'd' again to toggle debug mode on.\n");
+				break;
+			}
 		case '?': // help command
-			printf("\nbfm - an expanded brainfuck interpreter.\n\n> - move pointer right.\n< - move pointer left.\n+ - add 1 to current cell.\n- - subtract 1 from current cell.\n. - print contents of current cell in ASCII.\n, - ask for one char of user input.\n[ - start loop.\n] - end loop.\n! - end program.\n# - print contents of tape.\n@ - clear tape.\n/ - clear screen.\nv - show version.\n? - show this help dialogue.\n");
+			printf("\nbfm - an expanded brainf*ck interpreter.\n\n> - move pointer right.\n< - move pointer left.\n+ - add 1 to current cell.\n- - subtract 1 from current cell.\n. - print contents of current cell in ASCII.\n, - ask for one char of user input.\n[ - start loop.\n] - end loop.\n! - end program.\n# - print contents of tape (debug mode only).\n@ - clear tape (debug mode only).\n/ - clear screen.\nv - show version.\nc - show credits.\nd - enable/disable debug mode.\n? - show this help dialogue.\n");
 			break;
 		default:
 			break;
@@ -131,8 +173,7 @@ void runshell(int isdebug) {
 	if (!isdebug)
 		printf("bfm interactive shell.\n");
 	else {
-		printf("bfm interactive shell. (debug mode)\n");
-		debug = 1;
+		printf("bfm interactive shell (debug mode).\n");
 	}
 
 	char* str;
@@ -157,6 +198,10 @@ void runshell(int isdebug) {
 }
 
 void runfile(char* filename) {
+	if (isdebugfile == 1) {
+		printf("interpreting file in debug mode (-dF switch used).");
+		debug == 1;
+	}
 	// let's read the file in argument 1
 	FILE* myfile = fopen(filename, "rb");
 
@@ -187,6 +232,12 @@ int main(int argc, char** argv) {
 		}
 	}
 
+	if (argc == 2)
+		runfile(argv[1]);
+	else
+		runshell(0);
+
+p2:
 	if (argc == 2)
 		runfile(argv[1]);
 	else
