@@ -29,7 +29,13 @@ int debugprintarray() {
  
 	return 0;
 }
- 
+
+int compile(char x, int i) {
+	if (debug == 1) {
+		printf("Compiling '%c' at pos %d\n", x, i);
+	}
+}
+
 int interpret(char x, int i) {
 	if (debug == 1)
 		printf("Interpreting '%c' at pos %d\n", x, i);
@@ -139,7 +145,11 @@ int interpret(char x, int i) {
  
 	return 0;
 }
- 
+
+void compilebrain(char* code, int size) {
+	printf("wee it works");
+}
+
 void runbrain(char* code, int size) {
 	if (debug == 1) {
 		printf("Code: %s, size: %d\n", code, size);
@@ -226,8 +236,8 @@ void runfile(char* filename) {
  
 int main(int argc, char** argv) {
 	for (int i = 0; i < argc; ++i) {
-		if (!strcmp(argv[i], "-d")) {
-			runshell(1);
+		if (!strcmp(argv[i], "-c")) {
+			compilebrain;
 			goto end;
 		}
 	}
