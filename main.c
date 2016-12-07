@@ -9,6 +9,8 @@
 char* input;
 char* array;
 int counter = 0;
+int pluscount = 0;
+int minuscount = 0;
 int debug = 0; // debug mode variable, 0 = off, 1 = on. if corrupted the 'd' command will temporarily restore it.
 int loopmode = 0;
 int beginloop = 0;
@@ -92,6 +94,30 @@ int interpret(char x, int i) {
 				printf("hey! that's a debug (-d) mode only command!");
 				break;
 			}
+		//case '*':
+			//#define ARRSIZE array[counter]
+			//printf("ARRSIZE set to %c", array[counter]);
+			//break;
+		case '_':
+			while (minuscount < 10) {
+				--array[counter];
+				++minuscount;
+			}
+			if (debug == 1) {
+				printf("char at pos %d is now %d\n", counter, array[counter]);
+			}
+			minuscount = 0;
+			break;
+		case '=':
+			while (pluscount < 10) {
+				++array[counter];
+				++pluscount;
+			}
+			if (debug == 1) {
+				printf("char at pos %d is now %d\n", counter, array[counter]);
+			}
+			pluscount = 0;
+			break;
 		case '/':
 			#ifdef _WIN32
 			system("cls");
@@ -137,7 +163,7 @@ int interpret(char x, int i) {
 				break;
 			}
 		case '?': // help command
-			printf("\nbfm - an expanded brainf*ck interpreter.\n\n> - move pointer right.\n< - move pointer left.\n+ - add 1 to current cell.\n- - subtract 1 from current cell.\n. - print contents of current cell in ASCII.\n, - ask for one char of user input.\n[ - start loop.\n] - end loop.\n! - end program.\n# - print contents of tape (debug mode only).\n@ - clear tape (debug mode only).\n/ - clear screen.\nv - show version.\nc - show credits.\nd - enable/disable debug mode.\n? - show this help dialogue.\n");
+			printf("\nbfm - an expanded brainf*ck interpreter.\n\n> - move pointer right.\n< - move pointer left.\n+ - add 1 to current cell.\n- - subtract 1 from current cell.\n= - add 10 to current cell.\n_ - subtract 10 from current cell.\n. - print contents of current cell in ASCII.\n, - ask for one char of user input.\n[ - start loop.\n] - end loop.\n! - end program.\n# - print contents of tape (debug mode only).\n@ - clear tape (debug mode only).\n/ - clear screen.\nv - show version.\nc - show credits.\nd - enable/disable debug mode.\n? - show this help dialogue.\n");
 			break;
 		default:
 			break;
