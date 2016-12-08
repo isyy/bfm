@@ -8,6 +8,7 @@
 //char input[] = "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.";
 char* input;
 char* array;
+int shellmode = 0;
 int counter = 0;
 int pluscount = 0;
 int minuscount = 0;
@@ -32,7 +33,7 @@ int debugprintarray() {
 	return 0;
 }
 
-int compile(char x, int i) {
+int compile(char x, int i) { // WIP for a -c switch. translates everything in to C and then runs GCC to compiles it
 	if (debug == 1) {
 		printf("Compiling '%c' at pos %d\n", x, i);
 	}
@@ -43,45 +44,47 @@ int interpret(char x, int i) {
 		printf("Interpreting '%c' at pos %d\n", x, i);
 
 	switch (x) {
-		case '>':
+		case '>': // move cell pointer (the counter int) left
 			++counter;
 			break;
-		case '<':
+		case '<': // move cell pointer (the counter int) left
 			--counter;
 			break;
-		case '+':
+		case '+': // add 1 to current cell
 			++(array[counter]);
 			if (debug == 1)
 				printf("Char at pos %d is now %d\n", counter, array[counter]);
 			break;
-		case '-':
+		case '-': // subtract 1 from current cell
 			--(array[counter]);
 			if (debug == 1)
 				printf("Char at pos %d is now %d\n", counter, array[counter]);
 			break;
-		case '.':
+		case '.': // print contents of current cell in ASCII
 			if (debug == 1)
 				//sprintf(debugout, "%c", array[counter]);
 				strncat(debugout, array+counter, 1);
 			else
 				printf("%c", array[counter]);
 			break;
-		case ',':
+		case ',': // ask for one char of input
 			array[counter] = getchar();
 			break;
-		case '[':
+		case '[': // begin while (array[counter] == 0) loop
 			loopmode = 1;
 			beginloop = i;
 			break;
-		case '!':
-			printf("exiting...\n");
+		case '!': // exit command (shell has a non silent version)
+			if (shellmode == 1) {
+				printf("exiting...\n");
+			}
 			exit(0);
 			break;
 		case '#': // debugging command, prints out the tape
 			if (debug == 1)
 				debugprintarray();
 			else {
-				printf("hey! that'0s a debug (-d) mode only command!");
+				printf("hey! that's a debug (-d) mode-only command!");
 				break;
 			}
 		case '@': // debugging command, frees array
@@ -91,14 +94,17 @@ int interpret(char x, int i) {
 				printf("tape cleared.\n");
 			}
 			else {
-				printf("hey! that's a debug (-d) mode only command!");
+				printf("hey! that's a debug (-d) mode-only command!");
 				break;
 			}
-		//case '*':
+		//case '*': // set ARRSIZE to current cells value
 			//#define ARRSIZE array[counter]
 			//printf("ARRSIZE set to %c", array[counter]);
 			//break;
-		case '_':
+		case '^': // print current cells numerical value
+			printf("%d\n", array[counter]);
+			break;
+		case '_': // subtract 10 from current cell
 			while (minuscount < 10) {
 				--array[counter];
 				++minuscount;
@@ -108,7 +114,7 @@ int interpret(char x, int i) {
 			}
 			minuscount = 0;
 			break;
-		case '=':
+		case '=': // add 10 to current cell
 			while (pluscount < 10) {
 				++array[counter];
 				++pluscount;
@@ -118,7 +124,7 @@ int interpret(char x, int i) {
 			}
 			pluscount = 0;
 			break;
-		case '/':
+		case '/': // clear screen, works on Windows/*Nix/*BSD/whatever
 			#ifdef _WIN32
 			system("cls");
 			#else
@@ -146,7 +152,7 @@ int interpret(char x, int i) {
 		case 'c': // credits command
 			printf("bfm - built by @isy#0669 and @YPwn#9731");
 			break;
-		case 'd':
+		case 'd': // debug mode toggle
 			if (debug == 0) {
 				debug = 1;
 				printf("debug mode is now toggled ON. use 'd' again to turn it off.\n");
@@ -163,9 +169,10 @@ int interpret(char x, int i) {
 				break;
 			}
 		case '?': // help command
-			printf("\nbfm - an expanded brainf*ck interpreter.\n\n> - move pointer right.\n< - move pointer left.\n+ - add 1 to current cell.\n- - subtract 1 from current cell.\n= - add 10 to current cell.\n_ - subtract 10 from current cell.\n. - print contents of current cell in ASCII.\n, - ask for one char of user input.\n[ - start loop.\n] - end loop.\n! - end program.\n# - print contents of tape (debug mode only).\n@ - clear tape (debug mode only).\n/ - clear screen.\nv - show version.\nc - show credits.\nd - enable/disable debug mode.\n? - show this help dialogue.\n");
+			printf("\nbfm - an expanded brainf*ck interpreter.\n\n> - move pointer right.\n< - move pointer left.\n+ - add 1 to current cell.\n- - subtract 1 from current cell.\n= - add 10 to current cell.\n_ - subtract 10 from current cell.\n. - print contents of current cell in ASCII.\n, - ask for one char of user input.\n[ - start loop.\n] - end loop.\n! - end program.\n# - print contents of tape (debug mode only).\n@ - clear tape (debug mode only).\n^ - print numerical value of current cell.\n/ - clear screen.\nv - show version.\nc - show credits.\nd - enable/disable debug mode.\n? - show this help dialogue.\n");
 			break;
-		default:
+		default: // else
+			printf("that's not a valid command.");
 			break;
 	}
  
@@ -206,10 +213,12 @@ void runbrain(char* code, int size) {
 }
 
 void runshell(int isdebug) {
+	shellmode = 1;
 	if (!isdebug)
 		printf("bfm interactive shell.\n");
 	else {
 		printf("bfm interactive shell (debug mode).\n");
+		debug = 1;
 	}
 
 	char* str;
