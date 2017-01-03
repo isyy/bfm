@@ -172,7 +172,6 @@ int interpret(char x, int i) {
 			printf("\nbfm - an expanded brainf*ck interpreter.\n\n> - move pointer right.\n< - move pointer left.\n+ - add 1 to current cell.\n- - subtract 1 from current cell.\n= - add 10 to current cell.\n_ - subtract 10 from current cell.\n. - print contents of current cell in ASCII.\n, - ask for one char of user input.\n[ - start loop.\n] - end loop.\n! - end program.\n# - print contents of tape (debug mode only).\n@ - clear tape (debug mode only).\n^ - print numerical value of current cell.\n/ - clear screen.\nv - show version.\nc - show credits.\nd - enable/disable debug mode.\n? - show this help dialogue.\n");
 			break;
 		default: // else
-			printf("that's not a valid command.");
 			break;
 	}
  
