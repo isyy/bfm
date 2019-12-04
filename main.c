@@ -1,5 +1,5 @@
-// bfm interpreter/compiler & interactive shell. //
-// copyright (C) 2016 isy //
+// bfm interpreter //
+// copyright (C) 2019 duri64 //
 // under the GPLv3-License (SEE LICENSE.md) //
 
 #include <stdio.h>
@@ -78,6 +78,7 @@ int interpret(char x, int i) {
 			if (shellmode == 1) {
 				printf("exiting...\n");
 			}
+			free(array);
 			exit(0);
 			break;
 		case '#': // debugging command, prints out the tape
@@ -288,5 +289,6 @@ p2:
 		runshell(0);
 
 end:
+	free(array);
 	return 0;
 }
